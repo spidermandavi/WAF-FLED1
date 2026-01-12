@@ -1,0 +1,12 @@
+waf-fled/
+│
+├── index.html              ← main leaderboard (REQUIRED)
+├── results.html            ← tournament history
+├── achievements.html       ← WAFFLES / WAFFLED boards
+├── style.css               ← dark mode styling
+│
+├── data/
+│   └── players.js          ← leaderboard data + logic (REQUIRED)
+│
+└── tmt/
+    └── tmt1.html           ← first tournament page (can be simple)
