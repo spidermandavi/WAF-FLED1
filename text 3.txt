@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>WAF-FLED! Achievements</title>
+  <title>WAF-FLED! Tournaments</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <h1>Achievements</h1>
+    <h1>Tournament History</h1>
     <nav>
       <a href="index.html">Leaderboard</a>
-      <a href="results.html">Tournaments</a>
+      <a href="achievements.html">Achievements</a>
     </nav>
   </header>
 
   <main>
-    <h2>🧇 Most WAFFLES</h2>
-    <p>Tracked automatically from leaderboard.</p>
-
-    <h2>💥 Least WAFFLED</h2>
-    <p>Cleanest players rise here.</p>
+    <ul>
+      <li><a href="tmt/tmt1.html">TMT #1 – First WAF-FLED!</a></li>
+    </ul>
   </main>
 </body>
 </html>

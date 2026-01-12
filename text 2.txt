@@ -1,22 +1,43 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>WAF-FLED! Tournaments</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>Tournament History</h1>
-    <nav>
-      <a href="index.html">Leaderboard</a>
-      <a href="achievements.html">Achievements</a>
-    </nav>
-  </header>
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0f1115;
+  color: #eaeaea;
+}
 
-  <main>
-    <ul>
-      <li><a href="tmt/tmt1.html">TMT #1 – First WAF-FLED!</a></li>
-    </ul>
-  </main>
-</body>
-</html>
+header {
+  padding: 1rem;
+  background: #161a22;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  color: #ffd54a;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 0.7rem;
+  text-align: center;
+}
+
+th {
+  background: #1f2430;
+}
+
+tr:nth-child(even) {
+  background: #181c25;
+}
+
+h1, h2 {
+  margin: 0.5rem 0;
+}

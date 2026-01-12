@@ -1,47 +1,38 @@
-// ==== PLAYER DATA (AUTO-UPDATES) ====
-const players = [
-  {
-    username: "PlayerOne",
-    score: 40,
-    waffles: 3,
-    waffled: 1,
-    bestRank: 1,
-    lastDiff: "+5"
-  },
-  {
-    username: "PlayerTwo",
-    score: 35,
-    waffles: 2,
-    waffled: 0,
-    bestRank: 2,
-    lastDiff: "-2"
-  }
-];
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WAF-FLED! Leaderboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🧇 WAF-FLED!</h1>
+    <nav>
+      <a href="index.html">Leaderboard</a>
+      <a href="results.html">Tournaments</a>
+      <a href="achievements.html">Achievements</a>
+    </nav>
+  </header>
 
-// ==== SORTING LOGIC ====
-players.sort((a, b) => {
-  if (b.score !== a.score) return b.score - a.score;
-  if (b.waffles !== a.waffles) return b.waffles - a.waffles;
-  if (a.waffled !== b.waffled) return a.waffled - b.waffled;
-  return a.username.localeCompare(b.username);
-});
+  <main>
+    <h2>Current Standings</h2>
+    <table id="leaderboard">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Score</th>
+          <th>🧇</th>
+          <th>💥</th>
+          <th>Δ</th>
+          <th>Best Rank</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
 
-// ==== RENDER TABLE ====
-const tbody = document.querySelector("#leaderboard tbody");
-
-players.forEach((p, i) => {
-  const rank = i + 1;
-  if (!p.bestRank || rank < p.bestRank) p.bestRank = rank;
-
-  const row = document.createElement("tr");
-  row.innerHTML = `
-    <td>#${rank}</td>
-    <td>${p.username}</td>
-    <td>${p.score}</td>
-    <td>${p.waffles}</td>
-    <td>${p.waffled}</td>
-    <td>${p.lastDiff}</td>
-    <td>#${p.bestRank}</td>
-  `;
-  tbody.appendChild(row);
-});
+  <script src="data/players.js"></script>
+</body>
+</html>
