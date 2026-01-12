@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WAF-FLED! Leaderboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🧇 WAF-FLED!</h1>
+    <nav>
+      <a href="index.html">Leaderboard</a>
+      <a href="results.html">Tournaments</a>
+      <a href="achievements.html">Achievements</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Current Standings</h2>
+    <table id="leaderboard">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Score</th>
+          <th>🧇</th>
+          <th>💥</th>
+          <th>Δ</th>
+          <th>Best Rank</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </main>
+
+  <script src="data/players.js"></script>
+</body>
+</html>
