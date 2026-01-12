@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>WAF-FLED! Leaderboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🧇 WAF-FLED!</h1>
+    <nav>
+      <a href="index.html">Leaderboard</a>
+      <a href="results.html">Tournaments</a>
+      <a href="achievements.html">Achievements</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Current Standings</h2>
+    <table id="leaderboard">
+      <thead>
+        <tr>
+          <th>Rank</th>
+          <th>Username</th>
+          <th>Score</th>
+          <th>🧇</th>
+          <th>💥</th>
+          <th>Δ</th>
+          <th>Best Rank</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td colspan="7">Loading leaderboard…</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <script>
+  // ---------------- CONFIG ----------------
+  const tournamentIDs = [
+    "ZLfbxNcu", // current tournament
+    // add future tournaments here
+  ];
+
+  // ---------------- WAF-FLED SCORING ----------------
+  function getWafFledPoints(result, berserked, termination) {
+    switch(result) {
+      case "win": return berserked ? 1.5 : 1;
+      case "loss": return -1;
+      case "draw": return 0;
+      case "flag_win": return berserked ? 3 : 2;
+      case "flag_loss": return termination === "Time forfeit" ? -3 : -2;
+      case "resigned_win": return berserked ? 1.5 : 1;
+      case "resigned_loss": return -1;
+      default: return 0;
+    }
+  }
+
+  // ---------------- PARSE PGN ----------------
+  function parseGamePGN(pgn) {
+    const resultTag = /\[Result "([^\]]+)"]/i.exec(pgn);
+    const terminationTag = /\[Termination "([^\]]+)"]/i.exec(pgn);
+    const whiteBerserk = /\[WhiteBerserk "1"]/i.test(pgn);
+    const blackBerserk = /\[BlackBerserk "1"]/i.test(pgn);
+    const whiteTag = /\[White "([^\]]+)"]/i.exec(pgn);
+    const blackTag = /\[Black "([^\]]+)"]/i.exec(pgn);
+
+    const white = whiteTag ? whiteTag[1] : "";
+    const black = blackTag ? blackTag[1] : "";
+    const termination = terminationTag ? terminationTag[1] : "";
+
+    let winner = "";
+    if(resultTag) {
+      const r = resultTag[1];
+      if(r === "1-0") winner = white;
+      else if(r === "0-1") winner = black;
+      else winner = "";
+    }
+
+    function classifyResult(player, isWinner) {
+      if(!isWinner) return "draw";
+      if(termination.includes("Time forfeit")) return isWinner ? "flag_win" : "flag_loss";
+      if(termination.includes("Resignation")) return isWinner ? "resigned_win" : "resigned_loss";
+      if(termination.includes("Abandoned") || termination.includes("Normal")) return isWinner ? "win" : "loss";
+      return "draw";
+    }
+
+    return [
+      { player: white, result: classifyResult(white, winner === white), berserked: whiteBerserk, termination },
+      { player: black, result: classifyResult(black, winner === black), berserked: blackBerserk, termination }
+    ];
+  }
+
+  // ---------------- FETCH TOURNAMENT GAMES ----------------
+  async function fetchTournamentGames(tournamentID) {
+    const url = `https://lichess.org/api/tournament/${tournamentID}/games`;
+    const response = await fetch(url);
+    if(!response.ok) return []; // in case fetch fails
+    const pgnText = await response.text();
+    if(!pgnText) return [];
+    const games = pgnText.split(/\n(?=\[Event ")/).filter(g => g.trim() !== "");
+    return games.flatMap(parseGamePGN);
+  }
+
+  // ---------------- CALCULATE LEADERBOARD ----------------
+  function calculateLeaderboard(games) {
+    const players = {};
+
+    games.forEach(g => {
+      if(!players[g.player]) players[g.player] = { score:0, waffles:0, waffled:0, bestRank: Infinity, prevRank: null };
+      players[g.player].score += getWafFledPoints(g.result, g.berserked, g.termination);
+      if(g.result === "flag_win") players[g.player].waffles +=1;
+      if(g.result === "flag_loss") players[g.player].waffled +=1;
+    });
+
+    const leaderboard = Object.keys(players).map(p => ({
+      player: p,
+      score: players[p].score,
+      waffles: players[p].waffles,
+      waffled: players[p].waffled,
+      bestRank: players[p].bestRank,
+      prevRank: players[p].prevRank
+    }));
+
+    leaderboard.sort((a,b) => {
+      if(b.score !== a.score) return b.score - a.score;
+      if(b.waffles !== a.waffles) return b.waffles - a.waffles;
+      return a.waffled - b.waffled;
+    });
+
+    leaderboard.forEach((p,i) => {
+      p.rank = i+1;
+      if(p.rank < p.bestRank) p.bestRank = p.rank;
+    });
+
+    return leaderboard;
+  }
+
+  // ---------------- RENDER HTML ----------------
+  function renderLeaderboard(leaderboard) {
+    const tbody = document.querySelector("#leaderboard tbody");
+    tbody.innerHTML = "";
+    leaderboard.forEach(p => {
+      const delta = ""; // future: show rank change
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td>${p.rank}</td><td>${p.player}</td><td>${p.score}</td><td>${p.waffles}</td><td>${p.waffled}</td><td>${delta}</td><td>${p.bestRank}</td>`;
+      tbody.appendChild(tr);
+    });
+  }
+
+  // ---------------- MAIN ----------------
+  async function updateLeaderboard() {
+    let allGames = [];
+    for(const id of tournamentIDs) {
+      const games = await fetchTournamentGames(id);
+      allGames = allGames.concat(games);
+    }
+    const leaderboard = calculateLeaderboard(allGames);
+    renderLeaderboard(leaderboard);
+  }
+
+  // load leaderboard
+  updateLeaderboard();
+  </script>
+
+</body>
+</html>
