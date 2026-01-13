@@ -1,0 +1,104 @@
+/* ===== Base ===== */
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background: #0f1115;
+  color: #eaeaea;
+}
+
+h1, h2 {
+  margin: 0.5rem 0;
+}
+
+/* ===== Header & Nav ===== */
+
+header {
+  padding: 1rem;
+  background: #161a22;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  color: #ffd54a;
+  margin-left: 1rem;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+nav a:hover {
+  text-decoration: underline;
+}
+
+/* ===== Main ===== */
+
+main {
+  padding: 1rem;
+}
+
+/* ===== Leaderboard Table ===== */
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+th, td {
+  padding: 0.7rem;
+  text-align: center;
+}
+
+th {
+  background: #1f2430;
+}
+
+tr:nth-child(even) {
+  background: #181c25;
+}
+
+/* ===== Achievements / Podium ===== */
+
+section {
+  margin-top: 2rem;
+}
+
+.podium {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 1.5rem;
+  margin: 1.5rem 0 2.5rem;
+}
+
+.podium-slot {
+  background: #1f2430;
+  border-radius: 10px;
+  padding: 0.8rem;
+  width: 130px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+/* Podium heights */
+.place-1 { height: 170px; }
+.place-2 { height: 140px; }
+.place-3 { height: 110px; }
+
+/* Trophy & text */
+.trophy {
+  font-size: 2rem;
+  margin-bottom: 0.3rem;
+}
+
+.name {
+  font-weight: bold;
+  margin-top: 0.3rem;
+}
+
+.value {
+  opacity: 0.8;
+  margin-top: 0.2rem;
+}
