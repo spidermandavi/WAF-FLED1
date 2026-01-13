@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WAF-FLED! Achievements</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+<header>
+  <h1>🧇 WAF-FLED!</h1>
+  <nav>
+    <a href="index.html">Leaderboard</a>
+    <a href="results.html">Tournaments</a>
+    <a href="achievements.html">Achievements</a>
+  </nav>
+</header>
+
+<main>
+  <h2>🏆 Achievements</h2>
+
+  <section>
+    <h2>🧇 Most WAFFLES</h2>
+    <div class="podium" id="podium-waffles"></div>
+  </section>
+
+  <section>
+    <h2>💥 Most WAFFLED</h2>
+    <div class="podium" id="podium-waffled"></div>
+  </section>
+</main>
+
+<script>
+function buildPodium(targetId, statKey) {
+  if (!window.WAFFLED_DATA) return;
+
+  const top3 = [...window.WAFFLED_DATA]
+    .sort((a, b) => b[statKey] - a[statKey])
+    .slice(0, 3);
+
+  const medals = ["🥇", "🥈", "🥉"];
+
+  document.getElementById(targetId).innerHTML =
+    top3.map((p, i) => `
+      <div class="podium-slot place-${i + 1}">
+        <div class="trophy">${medals[i]}</div>
+        <div class="name">${p.name}</div>
+        <div class="value">${p[statKey]}</div>
+      </div>
+    `).join("");
+}
+
+// Wait until leaderboard data exists
+const waitForData = setInterval(() => {
+  if (window.WAFFLED_DATA) {
+    clearInterval(waitForData);
+    buildPodium("podium-waffles", "waffles");
+    buildPodium("podium-waffled", "waffled");
+  }
+}, 100);
+</script>
+</body>
+</html>
